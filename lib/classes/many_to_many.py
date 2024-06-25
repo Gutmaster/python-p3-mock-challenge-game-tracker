@@ -10,12 +10,14 @@ class Game:
     
     @title.setter
     def title(self, title):
-        if hasattr(self, 'title'): return
-        if isinstance(title, str) and title != "":
-            self._title = title
-        else:
+        if hasattr(self, 'title'):
+            raise Exception("Title is immutable")
+        if title == "":
             raise Exception("Title must be a non-empty string")
+        if isinstance(title, str):
+            self._title = title
 
+            
     def results(self):
         return self._results
 
@@ -30,10 +32,12 @@ class Game:
         return total / len(self.results())
 
 class Player:
+    all = []
     def __init__(self, username):
         self._username = username
         self._results = []
         self._games_played = []
+        Player.all.append(self)
 
     @property
     def username(self):
@@ -60,6 +64,16 @@ class Player:
                 gamecount += 1
         return gamecount
 
+    @classmethod
+    def highest_scored(cls, game):
+        highest = 0
+        high_player = None
+        for player in cls.all:
+            if player.played_game(game):
+                if game.average_score(player) > highest:
+                    highest = game.average_score(player)
+                    high_player = player
+        return high_player
 
 class Result:
     all = []
