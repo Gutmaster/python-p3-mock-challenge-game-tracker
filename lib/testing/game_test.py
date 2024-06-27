@@ -37,8 +37,8 @@ class TestGame:
         assert len(game.title) > 0
 
         # uncomment the next two lines if using Exceptions
-        # with pytest.raises(Exception):
-        #     Game("")
+        with pytest.raises(Exception):
+            Game("")
 
     def test_has_many_results(self):
         """game has many results"""

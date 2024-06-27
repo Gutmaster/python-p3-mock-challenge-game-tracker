@@ -1,6 +1,6 @@
 class Game:
     def __init__(self, title):
-        self._title = title
+        self.title = title
         self._results = []
         self._players = []
 
@@ -34,7 +34,7 @@ class Game:
 class Player:
     all = []
     def __init__(self, username):
-        self._username = username
+        self.username=(username)
         self._results = []
         self._games_played = []
         Player.all.append(self)
@@ -47,6 +47,8 @@ class Player:
     def username(self, username):
         if isinstance(username, str) and 2 <= len(username) <= 16:
             self._username = username
+        else:
+            raise ValueError("Username must be a string of 2 to 16 characters")
         
     def results(self):
         return self._results
@@ -79,15 +81,15 @@ class Result:
     all = []
 
     def __init__(self, player, game, score):
-        game._results.append(self)
+        game.results().append(self)
         player.results().append(self)
-        self._score = score
+        self.score = score
         self.player = player
         self.game = game
 
-        if not player in game._players:
-            game._players.append(player)
-            player._games_played.append(game)
+        if not player in game.players():
+            game.players().append(player)
+            player.games_played().append(game)
 
         Result.all.append(self)
             
@@ -97,8 +99,9 @@ class Result:
     
     @score.setter
     def score(self, score):
-        if hasattr(self, 'score'): return
-        if isinstance(score, int) and 1 <= score <= 5000:
+        if hasattr(self, '_score'):
+            raise Exception("Score is immutable")
+        if not isinstance(score, int):
+            raise Exception("Score must be an integer")
+        if 1 <= score <= 5000:
             self._score = score
-        else:
-            raise Exception("Score must be an integer between 1 and 5000")
